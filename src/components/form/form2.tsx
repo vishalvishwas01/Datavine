@@ -9,8 +9,10 @@ import EditIcon from "@/styles/EditIcon";
 import { Check } from "@/styles/Check";
 import { Delete } from "@/styles/Delete";
 import { PuffLoader } from "react-spinners";
+import { useParams } from "next/navigation";
 
 const Form2 = () => {
+  const { formId } = useParams();
   interface Field {
     id: number;
     heading: string;
@@ -26,6 +28,7 @@ const Form2 = () => {
   const ref = useRef<HTMLButtonElement | null>(null);
 
   const [newAdd, setNewAdd] = useState(false);
+  const [shareId, setShareId] = useState("");
   const [publicLink, setPublicLink] = useState("");
   const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -62,10 +65,20 @@ const Form2 = () => {
   ];
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPublicLink(`${window.location.origin}/forms/share/form2`);
+    async function fetchForm() {
+      const res = await fetch(`/api/forms?formId=${formId}`);
+      const data = await res.json();
+      setShareId(data.shareId);
+      setLoading(false);
     }
-  }, []);
+    fetchForm();
+  }, [formId]);
+
+  useEffect(() => {
+    if (shareId && typeof window !== "undefined") {
+      setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
+    }
+  }, [shareId]);
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -886,7 +899,7 @@ const Form2 = () => {
         </motion.div>
       )}
 
-      {!loading && (
+      {fields.length !== 0 && !loading && (
         <button
           onClick={() => navigator.clipboard.writeText(publicLink)}
           className="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700"
@@ -895,9 +908,40 @@ const Form2 = () => {
         </button>
       )}
 
-      {!loading && (
+      {fields.length !== 0 && !loading && (
         <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
       )}
+
+      <button
+        onClick={async () => {
+          if (!shareId) return alert("No shareId found for this form");
+
+          const confirmDelete = confirm(
+            "Are you sure you want to delete this form? This action cannot be undone."
+          );
+          if (!confirmDelete) return;
+
+          try {
+            const res = await fetch(`/api/forms/delete/${shareId}`, {
+              method: "DELETE",
+            });
+            const data = await res.json();
+
+            if (data.success) {
+              alert("Form deleted successfully");
+              window.location.href = "/template"; // redirect to forms list page
+            } else {
+              alert("Failed to delete form");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Something went wrong");
+          }
+        }}
+        className="bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 mt-4"
+      >
+        Delete Form
+      </button>
 
       {!loading && fieldsForm1.length !== 0 && (
         <Link

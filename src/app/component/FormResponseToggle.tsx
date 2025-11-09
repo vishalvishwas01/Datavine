@@ -6,23 +6,12 @@ import { startPayment } from "@/utils/payments";
 const FormResponseToggle = () => {
   const router = useRouter();
   const pathname = usePathname();
+
   const [user, setUser] = useState<any>(null);
-
-  const showNavbarRoutes = [
-    "/home/form1/responses",
-    "/home/form2/responses",
-    "/home/form3/responses",
-    "/home/form4/responses",
-    "/home/form1/analytics",
-    "/home/form2/analytics",
-    "/home/form3/analytics",
-    "/home/form4/analytics",
-    "/home/form1/report",
-    "/home/form2/report",
-    "/home/form3/report",
-    "/home/form4/report",
-  ];
-
+  const [formMap, setFormMap] = useState<Record<string, string>>({}); // form1 -> shareId mapping
+  const [formLinks, setFormLinks] = useState<
+    { formId: string; shareId: string }[]
+  >([]);
   useEffect(() => {
     async function loadUser() {
       const res = await fetch("/api/user/me", { cache: "no-store" });
@@ -31,6 +20,31 @@ const FormResponseToggle = () => {
     }
     loadUser();
   }, []);
+
+  // Load mapping: form1 -> shareId, form2 -> shareId ...
+  useEffect(() => {
+    async function loadForms() {
+      try {
+        const res = await fetch("/api/forms/all", { cache: "no-store" });
+        const data = await res.json();
+        setFormLinks(data.forms || []);
+      } catch (err) {}
+    }
+    loadForms();
+  }, []);
+
+  // If route doesn't look like /home/<id>/<page>, hide navbar
+  const parts = pathname.split("/");
+  if (parts[1] !== "home" || parts[2] === "preview" || parts.length < 4) return null;
+
+  const currentShareId = parts[2];
+  const currentPage = parts[3]; // responses | analytics | report
+
+  const navTo = (where: string) => {
+    router.push(`/home/${currentShareId}/${where}`);
+  };
+
+  const formButtons = ["form1", "form2", "form3", "form4"];
 
   const onPay = async () => {
     if (!user) return router.push("/auth/login");
@@ -41,50 +55,71 @@ const FormResponseToggle = () => {
     }
   };
 
-  if (!showNavbarRoutes.includes(pathname)) return null;
-
-  const formName = pathname.split("/")[2];
-
-  const navTo = (subPath: String) =>
-    router.push(`/home/${formName}/${subPath}`);
-
-  const formButtons = ["form1", "form2", "form3", "form4"];
-
   return (
     <div className="fixed z-10 w-full gap-4 py-2 flex flex-col justify-center items-center bg-white shadow-xl mt-18">
+      {/* Form Select Buttons */}
       <div className="gap-5 flex justify-center items-center">
-        {formButtons.map((form) => (
+        {formLinks.map((f) => (
           <button
-            key={form}
-            onClick={() => router.push(`/home/${form}/responses`)}
+            key={f.formId}
+            onClick={() => router.push(`/home/${f.shareId}/responses`)}
             className={`${
-              pathname.includes(form) ? "bg-gray-400" : "bg-gray-300"
+              pathname.includes(f.shareId) ? "bg-gray-400" : "bg-gray-300"
             } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}
           >
-            {form.replace("form", "Form ")}
+            {f.formId.replace("form", "Form ")}
           </button>
         ))}
       </div>
 
+      {/* Page Navigation */}
       <div className="flex justify-center items-center gap-5">
-        <button onClick={() => navTo("responses")} className={`${ pathname.endsWith("responses") ? "bg-gray-400" : "bg-gray-300" } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}>Responses</button>
+        <button
+          onClick={() => navTo("responses")}
+          className={`${
+            currentPage === "responses" ? "bg-gray-400" : "bg-gray-300"
+          } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}
+        >
+          Responses
+        </button>
 
         {user?.isPremium ? (
           <>
-            <button onClick={() => navTo("analytics")} className={`${ pathname.endsWith("analytics") ? "bg-gray-400" : "bg-gray-300" } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}>Analytics</button>
-            <button onClick={() => navTo("report")} className={`${ pathname.endsWith("report") ? "bg-gray-400" : "bg-gray-300" } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}>Download</button>
+            <button
+              onClick={() => navTo("analytics")}
+              className={`${
+                currentPage === "analytics" ? "bg-gray-400" : "bg-gray-300"
+              } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}
+            >
+              Analytics
+            </button>
+
+            <button
+              onClick={() => navTo("report")}
+              className={`${
+                currentPage === "report" ? "bg-gray-400" : "bg-gray-300"
+              } hover:bg-gray-400 transition-all cursor-pointer rounded-2xl px-2 py-1`}
+            >
+              Download
+            </button>
           </>
         ) : (
           <>
-            <button onClick={() => navTo("analytics")} className="cursor-pointer bg-gradient-to-r from-yellow-400  to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2">
+            <button
+              onClick={() => navTo("analytics")}
+              className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
+            >
               <span>Analytics</span>
-              <img src="/lock.svg"/>
+              <img src="/lock.svg" />
             </button>
 
-            <button onClick={() => navTo("report")} className="cursor-pointer bg-gradient-to-r from-yellow-400  to-amber-700 hover:to-amber-500 transition-all  rounded-2xl px-2 py-1 flex justify-center items-center gap-2">
+            <button
+              onClick={() => navTo("report")}
+              className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
+            >
               <span>Download</span>
-              <img src="/lock.svg"/>
-            </button>           
+              <img src="/lock.svg" />
+            </button>
           </>
         )}
       </div>

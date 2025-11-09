@@ -9,8 +9,10 @@ import EditIcon from "@/styles/EditIcon";
 import { Check } from "@/styles/Check";
 import { Delete } from "@/styles/Delete";
 import { PuffLoader } from "react-spinners";
+import { useParams } from "next/navigation";
 
 const Form3 = () => {
+    const { formId } = useParams();
   interface Field {
     id: number;
     heading: string;
@@ -26,7 +28,8 @@ const Form3 = () => {
 
   const ref = useRef<HTMLButtonElement | null>(null);
   const [newAdd, setNewAdd] = useState(false);
-  const [publicLink, setPublicLink] = useState("");
+  const [shareId, setShareId] = useState("");
+   const [publicLink, setPublicLink] = useState("");
   const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
@@ -62,10 +65,20 @@ const Form3 = () => {
   ];
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPublicLink(`${window.location.origin}/forms/share/form3`);
+    async function fetchForm() {
+      const res = await fetch(`/api/forms?formId=${formId}`);
+      const data = await res.json();
+      setShareId(data.shareId);
+      setLoading(false);
     }
-  }, []);
+    fetchForm();
+  }, [formId]);
+
+  useEffect(() => {
+    if (shareId && typeof window !== "undefined") {
+      setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
+    }
+  }, [shareId]);
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -886,17 +899,21 @@ const Form3 = () => {
         </motion.div>
       )}
 
-      {!loading && (
-        <button
+      {fields.length !== 0 && (
+        !loading && (
+          <button
           onClick={() => navigator.clipboard.writeText(publicLink)}
           className="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700"
-        >
+          >
           Copy Shareable Link
-        </button>
+          </button>
+        )
       )}
 
-      {!loading && (
-        <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
+      {fields.length !== 0 && (
+        !loading && (
+          <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
+        )
       )}
 
       {!loading && fieldsForm1.length !== 0 && (

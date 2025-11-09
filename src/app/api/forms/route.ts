@@ -40,6 +40,7 @@ export async function GET(req: Request) {
       fields: form.fields || [],
       formData: form.formData || [],
       formId: form.formId,
+      shareId: form.shareId,
       _id: form._id,
       userEmail: form.userEmail,
     });

@@ -5,16 +5,14 @@ import { UserData } from "@/models/UserData";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function POST(req: Request, context: { params: { formId: string } }) {
+export async function POST(req: Request, { params }: { params: { shareId: string } }) {
   try {
     await dbConnect();
 
-    const { params } = context;
-    const { formId } = await params; // ✅ FIX HERE
-
+    const { shareId } = params;
     const { responses } = await req.json();
 
-    const form = await Form.findOne({ formId }).lean();
+    const form = await Form.findOne({ shareId }).lean();
     if (!form) {
       return NextResponse.json({ error: "Form not found" }, { status: 404 });
     }
@@ -26,8 +24,8 @@ export async function POST(req: Request, context: { params: { formId: string } }
 
     await UserData.create({
       ownerEmail: form.userEmail,
-      shareId: form.shareId,
-      formId,
+      shareId,
+      formId: form.formId,
       responses: structuredResponses,
       respondentEmail: null,
     });
@@ -39,30 +37,24 @@ export async function POST(req: Request, context: { params: { formId: string } }
   }
 }
 
-
-
-export async function GET(
-  req: Request,
-  { params }: { params: { formId: string } }
-) {
-  try {
+export async function GET(req: Request, { params }: { params: { shareId: string } }) {
+try {
     await dbConnect();
 
     const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ responses: [] });
+    if (!session?.user?.email) {
+      return NextResponse.json({ responses: [] }, { status: 401 });
+    }
 
-    const { formId } = params;
+    const { shareId } = params;
 
-    const form = await Form.findOne({
-      formId,
-      userEmail: session.user.email,
-    }).lean();
-    if (!form) return NextResponse.json({ responses: [] });
-
-    const responses = await UserData.find({ shareId: form.shareId }).sort({
-      createdAt: -1,
-    });
-    return NextResponse.json({ responses });
+    // ✅ Fetch all responses for this shareId and owner
+    const responses = await UserData.find({
+      shareId,
+      ownerEmail: session.user.email
+    })
+    .select("respondentEmail responses submittedAt formId")
+    .lean();
 
     return NextResponse.json({ responses });
   } catch (error: any) {

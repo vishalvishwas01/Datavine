@@ -32,6 +32,7 @@ const Form1 = () => {
   const ref = useRef<HTMLButtonElement | null>(null);
 
   const [newAdd, setNewAdd] = useState(false);
+  const [shareId, setShareId] = useState("");
   const [publicLink, setPublicLink] = useState("");
   const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -67,11 +68,27 @@ const Form1 = () => {
     "checkbox (multiple choice)",
   ];
 
+//   useEffect(() => {
+//   if (typeof window !== "undefined") {
+//     setPublicLink(`${window.location.origin}/forms/share/${formId}`);
+//   }
+// }, [formId]);
+
   useEffect(() => {
-  if (typeof window !== "undefined") {
-    setPublicLink(`${window.location.origin}/forms/share/${formId}`);
-  }
-}, [formId]);
+    async function fetchForm() {
+      const res = await fetch(`/api/forms?formId=${formId}`);
+      const data = await res.json();
+      setShareId(data.shareId);
+      setLoading(false);
+    }
+    fetchForm();
+  }, [formId]);
+
+  useEffect(() => {
+    if (shareId && typeof window !== "undefined") {
+      setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
+    }
+  }, [shareId]);
 
 
   const handleSelect = (option: string) => {
@@ -896,18 +913,50 @@ const Form1 = () => {
         </motion.div>
       )}
 
-      {!loading && (
-        <button
+      {fields.length !== 0 && (
+        !loading && (
+          <button
           onClick={() => navigator.clipboard.writeText(publicLink)}
           className="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700"
-        >
+          >
           Copy Shareable Link
-        </button>
+          </button>
+        )
       )}
 
-      {!loading && (
-        <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
+      {fields.length !== 0 && (
+        !loading && (
+          <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
+        )
       )}
+
+      <button
+  onClick={async () => {
+    if (!shareId) return alert("No shareId found for this form");
+
+    const confirmDelete = confirm("Are you sure you want to delete this form? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/forms/delete/${shareId}`, { method: "DELETE" });
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Form deleted successfully");
+        window.location.href = "/forms"; // redirect to forms list page
+      } else {
+        alert("Failed to delete form");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    }
+  }}
+  className="bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 mt-4"
+>
+  Delete Form
+</button>
+
 
       {!loading && fieldsForm2.length !== 0 && (
         <Link href={"/home/form2"} className="w-full px-3 sm:w-2/3 cursor-default">

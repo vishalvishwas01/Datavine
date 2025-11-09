@@ -476,6 +476,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               height={24}
             />
             <div className="text-white hidden sm:block">{session?.user?.name || ""}</div>
+
           </div>
 
           <button
