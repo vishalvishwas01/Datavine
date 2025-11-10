@@ -28,26 +28,6 @@ const form2 = () => {
     if (formId) fetchForm();
   }, [formId]);
 
-  const isFormValid = () => {
-    if (!form) return false;
-    return form.fields.every((field: any) => {
-      if (!field.mandatory) return true; // optional field, ignore
-
-      const value = responses[field.id];
-
-      if (field.type === "file upload") {
-        return !!value; // must have a file selected
-      }
-
-      if (field.type.includes("checkbox")) {
-        return Array.isArray(value) ? value.length > 0 : !!value; // must have at least one choice
-      }
-
-      // for text, number, email, etc.
-      return value !== undefined && value !== null && value !== "";
-    });
-  };
-
   const handleChange = (fieldId: number, value: any) => {
     setResponses((prev) => ({ ...prev, [fieldId]: value }));
   };
@@ -70,22 +50,6 @@ const form2 = () => {
         return { ...prev, [fieldId]: option };
       }
     });
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const res = await fetch(`/api/forms/${formId}/responses`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ responses }),
-      });
-
-      if (!res.ok) throw new Error("Failed to submit response");
-      setSubmitted(true);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("❌ Failed to submit. Try again later.");
-    }
   };
 
   if (loading)
@@ -198,13 +162,7 @@ const form2 = () => {
         ))}
 
         <button
-          onClick={handleSubmit}
-          disabled={!isFormValid()}
-          className={`px-6 py-3 rounded-md mt-4 transition-all ${
-            isFormValid()
-              ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer"
-              : "bg-gray-400 text-white cursor-not-allowed"
-          }`}
+         className="px-6 py-3 rounded-md mt-4 transition-all bg-gray-400 text-white cursor-not-allowed"
         >
           Submit
         </button>

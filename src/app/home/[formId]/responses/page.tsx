@@ -77,7 +77,7 @@ const FormResponsesPage = () => {
   if (!responses.length)
     return (
       <div className="min-h-screen bg-gray-50 p-6 pt-45 flex justify-center items-center text-2xl font-bold">
-        No responses yet for this form.
+        No responses, Select your form
       </div>
     );
 

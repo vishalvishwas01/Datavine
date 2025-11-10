@@ -6,7 +6,6 @@ import Navbar from "@/components/dashboard/Navbar";
 export default function ConditionalNavbar() {
   const pathname = usePathname();
   const hideNavbarRoutes = [
-    "/",
     "/home",
     "/home/form1",
     "/home/form2",
@@ -28,7 +27,10 @@ export default function ConditionalNavbar() {
     "/upgrade"
   ];
 
-  if (!hideNavbarRoutes.includes(pathname)) return null;
+  const isHomeResponseRoute =
+    pathname.startsWith("/home") && pathname.endsWith("/responses") || pathname.endsWith("/analytics")  || pathname.endsWith("/report");
+
+  if (!hideNavbarRoutes.includes(pathname) && !isHomeResponseRoute) return null;
 
   return <Navbar />;
 }

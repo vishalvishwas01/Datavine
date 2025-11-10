@@ -26,7 +26,7 @@ const Form1 = () => {
     checkedOptions?: boolean[];
   }
 
-   const router = useRouter();
+  const router = useRouter();
   const { data: Session } = useSession();
 
   const ref = useRef<HTMLButtonElement | null>(null);
@@ -54,7 +54,7 @@ const Form1 = () => {
   const [savedDescription, setSavedDescription] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [newFieldsDisable, setNewFieldsDisable] = useState(false);
-
+  const [formDelete, setFormDelete] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
     null
   );
@@ -68,11 +68,11 @@ const Form1 = () => {
     "checkbox (multiple choice)",
   ];
 
-//   useEffect(() => {
-//   if (typeof window !== "undefined") {
-//     setPublicLink(`${window.location.origin}/forms/share/${formId}`);
-//   }
-// }, [formId]);
+  //   useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     setPublicLink(`${window.location.origin}/forms/share/${formId}`);
+  //   }
+  // }, [formId]);
 
   useEffect(() => {
     async function fetchForm() {
@@ -89,7 +89,6 @@ const Form1 = () => {
       setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
     }
   }, [shareId]);
-
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -247,7 +246,6 @@ const Form1 = () => {
     setIsEditing(false);
   };
 
-  // ✅ Determine if headline/description is unsaved
   const isDirty =
     headLine !== savedHeadLine || description !== savedDescription;
 
@@ -396,6 +394,36 @@ const Form1 = () => {
   const updatePreviewOption = (index: number, value: string) => {
     setPreviewOptions((prev) => prev.map((p, i) => (i === index ? value : p)));
     if (value.trim() !== "") setError("");
+  };
+
+  const handleFormDelete = async () => {
+    if (!shareId) {
+      alert("No shareId found for this form");
+      return;
+    }
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this form? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/forms/delete/${shareId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Form deleted successfully");
+        window.location.href = "/template";
+      } else {
+        alert("Failed to delete form");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    }
   };
 
   return (
@@ -913,53 +941,55 @@ const Form1 = () => {
         </motion.div>
       )}
 
-      {fields.length !== 0 && (
-        !loading && (
-          <button
+      {fields.length !== 0 && !loading && publicLink.length !== 0 && (
+        <button
           onClick={() => navigator.clipboard.writeText(publicLink)}
-          className="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700"
-          >
+          className="bg-green-600 text-white px-3 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-all"
+        >
           Copy Shareable Link
+        </button>
+      )}
+
+      {fields.length !== 0 && !loading && publicLink.length !== 0 && (
+        <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
+      )}
+
+      {publicLink.length === 0 && !loading && fields.length !== 0 && (
+        <button
+          onClick={() => window.location.reload()}
+          className="text-white bg-blue-400 hover:bg-blue-500 transition-all font-semibold px-2 py-1 rounded-xl cursor-pointer"
+        >
+          click here to view share link
+        </button>
+      )}
+
+        {fields.length !== 0 && !loading && (
+          <button
+            onClick={()=>setFormDelete(true)}
+            className={`bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 mt-4 cursor-pointer transition-all ${formDelete ? "hidden":"flex"}`}
+          >
+            Delete Form
           </button>
-        )
-      )}
+        )}
 
-      {fields.length !== 0 && (
-        !loading && (
-          <p className="text-sm mt-2 text-gray-600">Share link: {publicLink}</p>
-        )
-      )}
-
-      <button
-  onClick={async () => {
-    if (!shareId) return alert("No shareId found for this form");
-
-    const confirmDelete = confirm("Are you sure you want to delete this form? This action cannot be undone.");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`/api/forms/delete/${shareId}`, { method: "DELETE" });
-      const data = await res.json();
-
-      if (data.success) {
-        alert("Form deleted successfully");
-        window.location.href = "/forms"; // redirect to forms list page
-      } else {
-        alert("Failed to delete form");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    }
-  }}
-  className="bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 mt-4"
->
-  Delete Form
-</button>
-
+        {formDelete && 
+        <div className=" flex flex-col justify-center items-center w-auto h-full gap-3 bg-gray-400 px-2 py-1 rounded-2xl">
+          <div className="w-full">This will delete user as well as form data</div>
+          <div className="flex justify-center items-center gap-5">
+          <button  onClick={()=>setFormDelete(false)} className="text-white bg-green-400 hover:bg-green-300 transition-all cursor-pointer px-2 py-2 rounded-xl">
+            Cancel
+          </button>
+          <button onClick={handleFormDelete} className="text-white flex flex-col justify-center items-center bg-red-600 hover:bg-red-400 transition-all cursor-pointer px-3 py-2 rounded-xl">
+            Delete
+          </button>
+          </div>
+        </div>}
 
       {!loading && fieldsForm2.length !== 0 && (
-        <Link href={"/home/form2"} className="w-full px-3 sm:w-2/3 cursor-default">
+        <Link
+          href={"/home/form2"}
+          className="w-full px-3 sm:w-2/3 cursor-default"
+        >
           <FormSwitchButton
             firstText="Switch to form 2"
             secondText="Switch to form 2"
@@ -967,7 +997,10 @@ const Form1 = () => {
         </Link>
       )}
       {!loading && fieldsForm3.length !== 0 && (
-        <Link href={"/home/form3"} className="w-full px-3  sm:w-2/3 cursor-default">
+        <Link
+          href={"/home/form3"}
+          className="w-full px-3  sm:w-2/3 cursor-default"
+        >
           <FormSwitchButton
             firstText="Switch to form 3"
             secondText="Switch to form 3"
@@ -975,7 +1008,10 @@ const Form1 = () => {
         </Link>
       )}
       {!loading && fieldsForm4.length !== 0 && (
-        <Link href={"/home/form4"} className="w-full px-3  sm:w-2/3 cursor-default">
+        <Link
+          href={"/home/form4"}
+          className="w-full px-3  sm:w-2/3 cursor-default"
+        >
           <FormSwitchButton
             firstText="Switch to form 4"
             secondText="Switch to form 4"
