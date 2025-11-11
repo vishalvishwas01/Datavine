@@ -1,11 +1,12 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Navbar from "@/components/dashboard/Navbar";
+import { usePathname } from "next/navigation";
 
-export default function ConditionalNavbar() {
-  const pathname = usePathname();
+export default function ConditionalNavbarHeader() {
+  const pathname = usePathname(); // always called
 
+  // List of routes where the navbar should be hidden
   const hideNavbarRoutes = [
     "/home",
     "/home/form1",
@@ -25,16 +26,18 @@ export default function ConditionalNavbar() {
     "/home/form3/report",
     "/home/form4/report",
     "/template",
-    "/upgrade"
+    "/upgrade",
   ];
 
   const isHomeResponseRoute =
     pathname.startsWith("/home") &&
-    (pathname.endsWith("/responses") || pathname.endsWith("/analytics") || pathname.endsWith("/report"));
+    (pathname.endsWith("/responses") ||
+      pathname.endsWith("/analytics") ||
+      pathname.endsWith("/report"));
 
   const shouldShowNavbar = hideNavbarRoutes.includes(pathname) || isHomeResponseRoute;
 
   if (!shouldShowNavbar) return null;
 
-  return <Navbar />;
+ return <Navbar />;
 }
