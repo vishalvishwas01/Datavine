@@ -30,6 +30,5 @@ export default function ConditionalNavbar() {
 
   if (!hideNavbarRoutes.includes(pathname)) return null;
 
-  return <>
-  <div>hhhh</div></>;
+  return <Navbar />;
 }
