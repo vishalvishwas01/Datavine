@@ -1,8 +1,17 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, DefaultSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { dbConnect } from "@/lib/dbConnect";
 import { User } from "@/models/User";
+
+// Extend the default session type to include id
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string;
+    } & DefaultSession["user"];
+  }
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -39,7 +48,6 @@ export const authOptions: AuthOptions = {
       }
     },
 
-    // ✅ NEW: attach MongoDB user _id to the token
     async jwt({ token, user }) {
       if (user?.email) {
         await dbConnect();
@@ -49,10 +57,9 @@ export const authOptions: AuthOptions = {
       return token;
     },
 
-    // ✅ Read userId back from token into session
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
+        session.user.id = token.id as string;
       }
       return session;
     },
