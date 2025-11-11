@@ -4,7 +4,7 @@ import { startPayment } from "@/utils/payments";
 import {useRouter } from "next/navigation";
 import Image from "next/image";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   useEffect(() => {
@@ -102,4 +102,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

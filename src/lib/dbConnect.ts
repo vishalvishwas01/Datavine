@@ -7,7 +7,7 @@ if (!MONGODB_URI) {
 }
 
 // Cache connections across hot reloads in dev mode
-let cached = (global as any).mongoose || { conn: null, promise: null, gfs: null };
+const cached = (global as any).mongoose || { conn: null, promise: null, gfs: null };
 
 export async function dbConnect() {
   if (cached.conn) return cached.conn;

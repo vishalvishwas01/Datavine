@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import LoadingBar from "@/styles/LoadingBar";
 
 
-const form1 = () => {
+const Form1 = () => {
   const { formId } = useParams();
   const router = useRouter();
   const [form, setForm] = useState<any>(null);
@@ -171,4 +171,4 @@ const form1 = () => {
   );
 };
 
-export default form1;
+export default Form1;
