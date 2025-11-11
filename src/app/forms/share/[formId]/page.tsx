@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import LoadingBar from "@/styles/LoadingBar";
+import { type } from '../../../../../.next/types/routes';
 
 const ShareForm = () => {
   const { formId: shareId } = useParams(); // ✅ Rename for clarity
@@ -223,8 +224,8 @@ const ShareForm = () => {
               ) : (
                 <input
                   type={field.type}
-                  inputMode="numeric" 
-                  pattern="[0-9]*"
+                  inputMode={field.type === "number" ? "numeric":"email" }
+                  pattern={field.type === "number" ? "[0-9]*":"" }
                   className="border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-400"
                   placeholder="Enter number"
                   value={responses[field.id] || ""}
