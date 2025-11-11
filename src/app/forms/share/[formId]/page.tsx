@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import LoadingBar from "@/styles/LoadingBar";
-import { type } from '../../../../../.next/types/routes';
 
 const ShareForm = () => {
-  const { formId: shareId } = useParams(); // ✅ Rename for clarity
+  const { formId: shareId } = useParams(); 
 
   const [form, setForm] = useState<any>(null);
   const [responses, setResponses] = useState<Record<string, any>>({});
