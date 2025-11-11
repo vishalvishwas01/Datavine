@@ -77,8 +77,8 @@ const Form1 = () => {
     );
 
   return (
-    <div className="mt-15 text-black">
-      <div className=" w-full flex justify-between px-6 py-2 bg-white rounded-lg text-black items-center text-xl font-bold mb-2">
+    <div className="mt-15 text-black w-full flex flex-col justify-center items-center">
+      <div className="w-full sm:w-[600px] flex justify-between px-6 py-2 bg-white rounded-lg text-black items-center text-xl font-bold mb-2">
         <div>Preview</div>
         <button onClick={() => router.back()} className="bg-gray-400 px-2 rounded-lg cursor-pointer hover:bg-gray-200 transition-all">
          Back
