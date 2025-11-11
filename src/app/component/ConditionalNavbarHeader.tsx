@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function ConditionalNavbarHeader() {
   const pathname = usePathname();
@@ -16,10 +16,11 @@ export default function ConditionalNavbarHeader() {
   ];
 
   if (hideNavbarRoutes.includes(pathname)) return null;
+  const router = useRouter();
 
   return (
-    <div className="text-white fixed w-full h-auto flex justify-center items-center pt-5 pb-3 text-4xl font-bold z-20 bg-gradient-to-r from-[#0f172a]  to-[#334155] shadow-xl">
+    <button onClick={()=>router.push("/")} className="text-white cursor-pointer fixed w-full h-auto flex justify-center items-center pt-5 pb-3 text-4xl font-bold z-20 bg-gradient-to-r from-[#0f172a]  to-[#334155] shadow-xl">
       Datavine
-    </div>
+    </button>
   );
 }

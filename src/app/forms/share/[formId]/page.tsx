@@ -223,8 +223,10 @@ const ShareForm = () => {
               ) : (
                 <input
                   type={field.type}
+                  inputMode="numeric" 
+                  pattern="[0-9]*"
                   className="border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-400"
-                  placeholder="Start typing..."
+                  placeholder="Enter number"
                   value={responses[field.id] || ""}
                   onChange={(e) => handleChange(field.id, e.target.value)}
                 />
@@ -262,17 +264,6 @@ const ShareForm = () => {
                   </label>
                 ))}
               </div>
-            )}
-
-            {/* ✅ File Upload */}
-            {field.type === "file upload" && (
-              <input
-                type="file"
-                className="border border-gray-300 rounded-md px-3 py-2"
-                onChange={(e) =>
-                  handleChange(field.id, e.target.files?.[0] || null)
-                }
-              />
             )}
           </div>
         ))}
