@@ -105,7 +105,7 @@ const Page = () => {
       setForm4Fields(data4.fields || []);
       setLoading(false)
     } catch (err) {
-      console.log("No existing form found — starting fresh.");
+      console.log("No existing form found — starting fresh." + err);
     }
   };
 

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import RotatingText from "@/styles/RotatingText";
 import SlideArrowButton from "@/styles/SlideArrowButton";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { data: Session } = useSession();

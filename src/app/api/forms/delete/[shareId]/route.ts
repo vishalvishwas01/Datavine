@@ -1,12 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { Form } from "@/models/Form";
 import { UserData } from "@/models/UserData";
 
-export async function DELETE(req: Request, { params }: { params: { shareId: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ shareId: string }> } // params is a Promise
+) {
   try {
     await dbConnect();
-    const { shareId } = params;
+
+    const { shareId } = await context.params; // await the params
 
     // Delete form
     const formDeleted = await Form.deleteOne({ shareId });

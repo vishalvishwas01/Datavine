@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { Form } from "@/models/Form";
 import { UserData } from "@/models/UserData";
 
-export async function POST(req: Request, context: { params: { shareId: string } }) {
+export async function POST(
+  req: NextRequest,
+  context: { params: Promise<{ shareId: string }> } // params is a Promise
+) {
   try {
     await dbConnect();
 
-    // ✅ Must await context.params
-    const { shareId } = await context.params;
+    const { shareId } = await context.params; // await the params
     const { responses } = await req.json();
 
     const form = await Form.findOne({ shareId });

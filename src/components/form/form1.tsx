@@ -9,8 +9,8 @@ import EditIcon from "@/styles/EditIcon";
 import { Check } from "@/styles/Check";
 import { Delete } from "@/styles/Delete";
 import { PuffLoader } from "react-spinners";
-import { useParams, useRouter } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useParams } from "next/navigation";
+import Image from "next/image";
 
 const Form1 = () => {
   const { formId } = useParams();
@@ -25,9 +25,6 @@ const Form1 = () => {
     options?: string[];
     checkedOptions?: boolean[];
   }
-
-  const router = useRouter();
-  const { data: Session } = useSession();
 
   const ref = useRef<HTMLButtonElement | null>(null);
 
@@ -112,7 +109,7 @@ const Form1 = () => {
         const data = await res.json();
         setFields(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -129,7 +126,7 @@ const Form1 = () => {
         const data = await res.json();
         setFieldsForm2(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -146,7 +143,7 @@ const Form1 = () => {
         const data = await res.json();
         setFieldsForm3(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -163,7 +160,7 @@ const Form1 = () => {
         const data = await res.json();
         setFieldsForm4(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -462,7 +459,7 @@ const Form1 = () => {
                       onClick={handleCancel}
                       className="cursor-pointer h-8 flex justify-center items-center"
                     >
-                      <img src="/cancel.svg" />
+                      <Image height={30} width={30} src="/cancel.svg" alt="cancel"/>
                     </button>
                   </motion.div>
                 ) : (

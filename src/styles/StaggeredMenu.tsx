@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { gsap } from "gsap";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export interface StaggeredMenuItem {
   label: string;

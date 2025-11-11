@@ -1,15 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { Form } from "@/models/Form";
 import { UserData } from "@/models/UserData";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function POST(req: Request, { params }: { params: { shareId: string } }) {
+export async function POST(
+  req: NextRequest,
+  context: { params: Promise<{ shareId: string }> }
+) {
   try {
     await dbConnect();
 
-    const { shareId } = params;
+    const { shareId } = await context.params; // Await the params
     const { responses } = await req.json();
 
     const form = await Form.findOne({ shareId }).lean();
@@ -37,8 +40,11 @@ export async function POST(req: Request, { params }: { params: { shareId: string
   }
 }
 
-export async function GET(req: Request, { params }: { params: { shareId: string } }) {
-try {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ shareId: string }> }
+) {
+  try {
     await dbConnect();
 
     const session = await getServerSession(authOptions);
@@ -46,15 +52,14 @@ try {
       return NextResponse.json({ responses: [] }, { status: 401 });
     }
 
-    const { shareId } = params;
+    const { shareId } = await context.params; // Await the params
 
-    // ✅ Fetch all responses for this shareId and owner
     const responses = await UserData.find({
       shareId,
       ownerEmail: session.user.email
     })
-    .select("respondentEmail responses submittedAt formId")
-    .lean();
+      .select("respondentEmail responses submittedAt formId")
+      .lean();
 
     return NextResponse.json({ responses });
   } catch (error: any) {

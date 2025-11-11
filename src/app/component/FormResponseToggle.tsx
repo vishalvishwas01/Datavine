@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { startPayment } from "@/utils/payments";
+import Image from "next/image";
 
 const FormResponseToggle = () => {
   const router = useRouter();
   const pathname = usePathname();
 
   const [user, setUser] = useState<any>(null);
-  const [formMap, setFormMap] = useState<Record<string, string>>({}); // form1 -> shareId mapping
   const [formLinks, setFormLinks] = useState<
     { formId: string; shareId: string }[]
   >([]);
@@ -24,11 +23,9 @@ const FormResponseToggle = () => {
   // Load mapping: form1 -> shareId, form2 -> shareId ...
   useEffect(() => {
     async function loadForms() {
-      try {
         const res = await fetch("/api/forms/all", { cache: "no-store" });
         const data = await res.json();
         setFormLinks(data.forms || []);
-      } catch (err) {}
     }
     loadForms();
   }, []);
@@ -43,18 +40,6 @@ const FormResponseToggle = () => {
   const navTo = (where: string) => {
     router.push(`/home/${currentShareId}/${where}`);
   };
-
-  const formButtons = ["form1", "form2", "form3", "form4"];
-
-  const onPay = async () => {
-    if (!user) return router.push("/auth/login");
-    try {
-      await startPayment(user.id);
-    } catch (err: any) {
-      alert(err.message || "Payment failed");
-    }
-  };
-
   return (
     <div className="fixed z-10 w-full gap-4 py-2 flex flex-col justify-center items-center bg-white shadow-xl mt-18">
       {/* Form Select Buttons */}
@@ -110,7 +95,7 @@ const FormResponseToggle = () => {
               className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
             >
               <span>Analytics</span>
-              <img src="/lock.svg" />
+              <Image width={25} height={25} alt="lock" src="/lock.svg"/>
             </button>
 
             <button
@@ -118,7 +103,7 @@ const FormResponseToggle = () => {
               className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
             >
               <span>Download</span>
-              <img src="/lock.svg" />
+              <Image width={25} height={25} alt="lock" src="/lock.svg"/>
             </button>
           </>
         )}

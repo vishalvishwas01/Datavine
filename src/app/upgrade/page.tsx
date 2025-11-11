@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { startPayment } from "@/utils/payments";
-import { usePathname, useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
 import Image from "next/image";
 
 const page = () => {
   const router = useRouter();
-  const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   useEffect(() => {
     async function loadUser() {

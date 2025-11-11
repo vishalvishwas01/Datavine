@@ -10,6 +10,7 @@ import { Check } from "@/styles/Check";
 import { Delete } from "@/styles/Delete";
 import { PuffLoader } from "react-spinners";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 
 const Form2 = () => {
   const { formId } = useParams();
@@ -103,7 +104,7 @@ const Form2 = () => {
         const data = await res.json();
         setFields(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -120,7 +121,7 @@ const Form2 = () => {
         const data = await res.json();
         setFieldsForm1(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -137,7 +138,7 @@ const Form2 = () => {
         const data = await res.json();
         setFieldsForm3(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -154,7 +155,7 @@ const Form2 = () => {
         const data = await res.json();
         setFieldsForm4(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -450,7 +451,7 @@ const Form2 = () => {
                       onClick={handleCancel}
                       className="cursor-pointer h-8 flex justify-center items-center"
                     >
-                      <img src="/cancel.svg" />
+                      <Image height={30} width={30} src="/cancel.svg" alt="cancel"/>
                     </button>
                   </motion.div>
                 ) : (

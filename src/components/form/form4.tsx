@@ -10,6 +10,7 @@ import { Check } from "@/styles/Check";
 import { Delete } from "@/styles/Delete";
 import { PuffLoader } from "react-spinners";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 
 const Form4 = () => {
   const { formId } = useParams();
@@ -440,7 +441,7 @@ const Form4 = () => {
                       onClick={handleCancel}
                       className="cursor-pointer h-8 flex justify-center items-center"
                     >
-                      <img src="/cancel.svg" />
+                      <Image height={30} width={30} src="/cancel.svg" alt="cancel"/>
                     </button>
                   </motion.div>
                 ) : (
