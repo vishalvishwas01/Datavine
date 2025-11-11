@@ -10,7 +10,7 @@ export default async function AnalyticsLayout({ children }: { children: React.Re
     // redirect user to pay screen or show a locked notice
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-center p-10">
-        <h1 className="text-2xl font-semibold mb-4">Analytics is a Premium Feature</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-white">Analytics is a Premium Feature</h1>
         <p className="text-gray-600 mb-6">Upgrade to unlock analytics and download reports.</p>
 
         <a

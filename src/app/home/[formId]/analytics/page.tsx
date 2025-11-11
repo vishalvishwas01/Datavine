@@ -180,7 +180,7 @@ export default function AnalyticsPage() {
                     arcLabel: "value",
                   },
                 ]}
-                width={300}
+                width={250}
                 height={300}
               />
             </div>
@@ -191,7 +191,7 @@ export default function AnalyticsPage() {
       {dataMixedLenght ? (
         <>
           {mixedCharts.map((chart, index) => {
-            const barWidth = 80; // width per bar in pixels
+            const barWidth = 80;
             const chartWidth = Math.max(
               chart.data.length * barWidth,
               window.innerWidth * 0.9
@@ -235,7 +235,7 @@ export default function AnalyticsPage() {
                   { data: chart.data.map((d) => d.label), scaleType: "band" },
                 ]}
                 series={[{ data: chart.data.map((d) => d.value) }]}
-                width={400}
+                width={330}
                 height={300}
                 colors={BAR_COLORS}
               />

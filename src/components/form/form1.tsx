@@ -948,7 +948,7 @@ const Form1 = () => {
       )}
 
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
-        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center">Share link: {publicLink}</p>
+        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center text-center">Share link: {publicLink}</p>
       )}
 
       {publicLink.length === 0 && !loading && fields.length !== 0 && (
