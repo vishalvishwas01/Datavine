@@ -26,7 +26,7 @@ export async function startPayment(userId: string) {
 
     amount: data.order.amount,
     currency: data.order.currency,
-    name: "Your App Name",
+    name: "Datavine",
     description: "Unlock analytics and downloads",
     order_id: data.order.id,
     handler: async function (response: any) {
