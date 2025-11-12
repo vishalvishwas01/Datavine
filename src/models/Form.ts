@@ -25,7 +25,7 @@ export interface IForm extends Document {
   userEmail: string;
   headLine?: string;
   description?: string;
-  shareId?:string;
+  shareId?: string;
   fields: IField[];
   formData: IFormData[];
   uploadedFiles?: IUploadedFile[];
@@ -62,7 +62,12 @@ const FormSchema = new Schema<IForm>(
   {
     formId: { type: String, required: true },
     userEmail: { type: String, required: true },
-    shareId: { type: String, required: true, unique: true, default: () => nanoid(10) },
+    shareId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => nanoid(10),
+    },
     fields: { type: [FieldSchema], default: [] },
     formData: { type: [FormDataSchema], default: [] },
     uploadedFiles: { type: [UploadedFileSchema], default: [] },

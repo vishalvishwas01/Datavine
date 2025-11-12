@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { data: Session } = useSession();
-  
+
   return (
     <>
       <div className="w-screen h-screen flex flex-col gap-5 justify-center items-center z-70">
@@ -26,7 +26,10 @@ export default function Home() {
           />
         </div>
 
-        <Link href={Session ? "/home" : "/auth/login"} className="cursor-pointer">
+        <Link
+          href={Session ? "/home" : "/auth/login"}
+          className="cursor-pointer"
+        >
           <SlideArrowButton
             text="Get Started"
             className="text-white border-white px-4 py-2 cursor-pointer"

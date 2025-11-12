@@ -24,7 +24,6 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Form not found" }, { status: 404 });
     }
 
-    // ✅ Extract headLine and description from formData
     let headLine = "";
     let description = "";
 
@@ -33,7 +32,6 @@ export async function GET(req: Request) {
       description = form.formData[0].description || "";
     }
 
-    // ✅ Return both: flattened data (for preview) + full form (for main builder)
     return NextResponse.json({
       headLine,
       description,
@@ -66,7 +64,6 @@ export async function POST(req: Request) {
       userEmail: session.user.email,
     };
 
-    // ✅ Save both fields and formData
     if (fields) updateObject.fields = fields;
     if (formData) updateObject.formData = formData;
 

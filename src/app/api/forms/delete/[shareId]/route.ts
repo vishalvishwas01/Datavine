@@ -5,17 +5,17 @@ import { UserData } from "@/models/UserData";
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: Promise<{ shareId: string }> } // params is a Promise
+  context: { params: Promise<{ shareId: string }> } 
 ) {
   try {
     await dbConnect();
 
-    const { shareId } = await context.params; // await the params
+    const { shareId } = await context.params; 
 
-    // Delete form
+    
     const formDeleted = await Form.deleteOne({ shareId });
 
-    // Delete related responses
+    
     const responsesDeleted = await UserData.deleteMany({ shareId });
 
     return NextResponse.json({

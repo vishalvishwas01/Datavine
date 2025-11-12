@@ -7,8 +7,8 @@ interface IResponseItem {
 
 export interface IUserData extends Document {
   ownerEmail: string;
-  shareId:string;
-  respondentEmail?: string | null; // ✅ add this in TypeScript
+  shareId: string;
+  respondentEmail?: string | null;
   formId: string;
   responses: IResponseItem[];
   submittedAt: Date;
@@ -22,7 +22,7 @@ const ResponseItemSchema = new Schema<IResponseItem>({
 const UserDataSchema = new Schema<IUserData>({
   ownerEmail: { type: String, required: true },
   shareId: { type: String, required: true, index: true },
-  respondentEmail: { type: String, default: null }, // ✅ add here too
+  respondentEmail: { type: String, default: null },
   formId: { type: String, required: true },
   responses: [ResponseItemSchema],
   submittedAt: { type: Date, default: Date.now },

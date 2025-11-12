@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    // ✅ Get all forms owned by the logged-in user
+    
     const forms = await Form.find({
       userEmail: session.user.email,
     })

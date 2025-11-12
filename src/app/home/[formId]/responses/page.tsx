@@ -121,7 +121,6 @@ const FormResponsesPage = () => {
       </motion.h1>
 
       {responses.map((resDoc, index) => {
-        // possible fields where answers live: resDoc.responses, resDoc.data, resDoc (if single)
         const candidate = resDoc.responses ?? (resDoc as any).data ?? resDoc;
         const items = normalize(candidate);
 

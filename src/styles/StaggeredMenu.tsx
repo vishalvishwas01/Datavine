@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { gsap } from "gsap";
 import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
 
 export interface StaggeredMenuItem {
   label: string;
@@ -40,7 +41,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   items = [],
   displayItemNumbering = true,
   className,
-  logoUrl = "/src/assets/logos/reactbits-gh-white.svg",
+  logoUrl = "/",
   menuButtonColor = "#fff",
   openMenuButtonColor = "#fff",
   changeMenuColorOnOpen = true,
@@ -467,16 +468,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             className="sm-logo flex items-center gap-5 select-none pointer-events-auto"
             aria-label="Logo"
           >
-            <img
-              src={logoUrl}
-              alt="Logo"
-              className="sm-logo-img block h-8 w-auto object-contain"
-              draggable={false}
-              width={110}
-              height={24}
-            />
+            <Image height={35} width={35} quality={100} src="/logo.svg" alt="logo"/>
             <div className="text-white hidden sm:block">{session?.user?.name || ""}</div>
-
           </div>
 
           <button

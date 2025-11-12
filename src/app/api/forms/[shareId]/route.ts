@@ -9,9 +9,8 @@ export async function GET(
   try {
     await dbConnect();
 
-    const { shareId } = await params; // ✅ await because Next.js dynamic params are async
+    const { shareId } = await params;
 
-    // 🔍 Find the form by shareId (NOT _id)
     const form = await Form.findOne({ shareId });
 
     if (!form) {

@@ -1,4 +1,3 @@
-// src/app/api/payments/create-order/route.ts
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { dbConnect } from "@/lib/dbConnect";
@@ -21,7 +20,7 @@ export async function POST(req: Request) {
     const { userId } = await req.json();
     await dbConnect();
 
-    const amount = 199 * 100; // convert INR to paisa
+    const amount = 199 * 100;
 
     const order = (await razor.orders.create({
       amount,

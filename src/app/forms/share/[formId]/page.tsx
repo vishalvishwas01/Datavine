@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import LoadingBar from "@/styles/LoadingBar";
 
 const ShareForm = () => {
-  const { formId: shareId } = useParams(); 
+  const { formId: shareId } = useParams();
 
   const [form, setForm] = useState<any>(null);
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -14,7 +14,7 @@ const ShareForm = () => {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const res = await fetch(`/api/forms/share/${shareId}`); // ✅ Use shareId
+        const res = await fetch(`/api/forms/share/${shareId}`);
 
         if (!res.ok) throw new Error("Form not found");
         const data = await res.json();
@@ -47,7 +47,11 @@ const ShareForm = () => {
     setResponses((prev) => ({ ...prev, [fieldId]: value }));
   };
 
-  const handleCheckboxChange = (fieldId: number, option: string, isMultiple: boolean) => {
+  const handleCheckboxChange = (
+    fieldId: number,
+    option: string,
+    isMultiple: boolean
+  ) => {
     setResponses((prev) => {
       if (isMultiple) {
         const current = prev[fieldId] || [];
@@ -65,7 +69,7 @@ const ShareForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch(`/api/forms/share/${shareId}/responses`, { // ✅ Use shareId
+      const res = await fetch(`/api/forms/share/${shareId}/responses`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ responses }),
@@ -75,7 +79,7 @@ const ShareForm = () => {
       setSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("❌ Failed to submit. Try again later.");
+      alert("Failed to submit. Try again later.");
     }
   };
 
@@ -101,92 +105,6 @@ const ShareForm = () => {
         </h2>
       </div>
     );
-
-//   return (
-//     <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-6 pt-20">
-//       <div className="bg-white shadow-lg rounded-xl w-full sm:w-[600px] p-6 flex flex-col gap-6">
-//         <div>
-//           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-//             {form.formData?.[0]?.headLine || "Untitled Form"}
-//           </h1>
-//           <p className="text-gray-600">{form.formData?.[0]?.description || ""}</p>
-//         </div>
-
-//         {form.fields.map((field: any) => (
-//           <div key={field.id} className="flex flex-col gap-2 bg-gray-100 p-2 rounded-2xl">
-//             <label className="font-medium text-gray-700">
-//               {field.heading}
-//               {field.mandatory && <span className="text-red-500 ml-1">*</span>}
-//             </label>
-
-//             {!field.type.includes("checkbox") &&
-//               field.type !== "file upload" &&
-//               (field.type.includes("text") ? (
-//                 <textarea
-//                   className="border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-400"
-//                   value={responses[field.id] || ""}
-//                   onChange={(e) => handleChange(field.id, e.target.value)}
-//                 />
-//               ) : (
-//                 <input
-//                   type={field.type}
-//                   className="border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-400"
-//                   value={responses[field.id] || ""}
-//                   onChange={(e) => handleChange(field.id, e.target.value)}
-//                 />
-//               ))}
-
-//             {field.type === "checkbox (single choice)" &&
-//               field.options?.map((opt: string, i: number) => (
-//                 <label key={i} className="flex gap-2 items-center">
-//                   <input
-//                     type="radio"
-//                     name={`field-${field.id}`}
-//                     checked={responses[field.id] === opt}
-//                     onChange={() => handleCheckboxChange(field.id, opt, false)}
-//                   />
-//                   <span>{opt}</span>
-//                 </label>
-//               ))}
-
-//             {field.type === "checkbox (multiple choice)" &&
-//               field.options?.map((opt: string, i: number) => (
-//                 <label key={i} className="flex gap-2 items-center">
-//                   <input
-//                     type="checkbox"
-//                     checked={responses[field.id]?.includes(opt) || false}
-//                     onChange={() => handleCheckboxChange(field.id, opt, true)}
-//                   />
-//                   <span>{opt}</span>
-//                 </label>
-//               ))}
-
-//             {field.type === "file upload" && (
-//               <input
-//                 type="file"
-//                 className="border border-gray-300 rounded-md px-3 py-2"
-//                 onChange={(e) => handleChange(field.id, e.target.files?.[0] || null)}
-//               />
-//             )}
-//           </div>
-//         ))}
-
-//         <button
-//           onClick={handleSubmit}
-//           disabled={!isFormValid()}
-//           className={`px-6 py-3 rounded-md mt-4 transition-all ${
-//             isFormValid()
-//               ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer"
-//               : "bg-gray-400 text-white cursor-not-allowed"
-//           }`}
-//         >
-//           Submit
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
   return (
     <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-6 pt-20">
       <div className="bg-white shadow-lg rounded-xl w-full sm:w-[600px] p-6 flex flex-col gap-6">
@@ -210,7 +128,7 @@ const ShareForm = () => {
               {field.mandatory && <span className="text-red-500 ml-1">*</span>}
             </label>
 
-            {/* ✅ Text, Number, Email, Date fields */}
+            {/*Text, Number, Email, Date fields */}
             {!field.type.includes("checkbox") &&
               field.type !== "file upload" &&
               (field.type.includes("text") ? (
@@ -223,8 +141,8 @@ const ShareForm = () => {
               ) : (
                 <input
                   type={field.type}
-                  inputMode={field.type === "number" ? "numeric":"email" }
-                  pattern={field.type === "number" ? "[0-9]*":"" }
+                  inputMode={field.type === "number" ? "numeric" : "email"}
+                  pattern={field.type === "number" ? "[0-9]*" : ""}
                   className="border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-400"
                   placeholder="Enter number"
                   value={responses[field.id] || ""}
@@ -232,7 +150,7 @@ const ShareForm = () => {
                 />
               ))}
 
-            {/* ✅ Checkbox / Multiple Choice */}
+            {/*Checkbox / Multiple Choice */}
             {field.type === "checkbox (single choice)" && (
               <div className="flex flex-col gap-1">
                 {field.options?.map((opt: string, i: number) => (
@@ -285,7 +203,3 @@ const ShareForm = () => {
 };
 
 export default ShareForm;
-
-
-
-

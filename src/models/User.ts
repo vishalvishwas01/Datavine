@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { Types } from "mongoose";
 
-// --- Payment subdocument interface ---
+// Payment subdocument interface
 interface IPayment extends Document {
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
@@ -9,8 +9,7 @@ interface IPayment extends Document {
   createdAt?: Date;
 }
 
-
-// --- User interface ---
+//  User interface
 export interface IUser extends Document {
   _id: Types.ObjectId;
   name?: string;
@@ -18,10 +17,10 @@ export interface IUser extends Document {
   image?: string;
   isPremium?: boolean;
   premiumSince?: Date;
-  payments: Types.DocumentArray<IPayment>; // Important change
+  payments: Types.DocumentArray<IPayment>;
 }
 
-// --- Payment Schema ---
+//  Payment Schema
 const PaymentSchema = new Schema<IPayment>(
   {
     razorpayOrderId: String,
@@ -29,10 +28,10 @@ const PaymentSchema = new Schema<IPayment>(
     amount: Number,
     createdAt: { type: Date, default: Date.now },
   },
-  { _id: true } // keep subdocument ids
+  { _id: true }
 );
 
-// --- User Schema ---
+//  User Schema
 const UserSchema = new Schema<IUser>(
   {
     name: String,
@@ -45,6 +44,5 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-// --- Model export ---
 export const User: Model<IUser> =
   mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

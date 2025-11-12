@@ -4,14 +4,14 @@ import { Form } from "@/models/Form";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ shareId: string }> } // ✅ make params awaitable
+  { params }: { params: Promise<{ shareId: string }> } 
 ) {
   try {
     await dbConnect();
 
-    const { shareId } = await params; // ✅ await params
+    const { shareId } = await params; 
 
-    // ✅ Lookup form by shareId instead of _id
+    
     const form = await Form.findOne({ shareId }).lean();
 
     if (!form) {

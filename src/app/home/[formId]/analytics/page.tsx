@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
 
   if (responses.length === 0) {
     return (
-     <div className="min-h-screen bg-gray-50 p-6 pt-45 flex justify-center items-center text-2xl font-bold">
+      <div className="min-h-screen bg-gray-50 p-6 pt-45 flex justify-center items-center text-2xl font-bold">
         No responses yet for this form.
       </div>
     );

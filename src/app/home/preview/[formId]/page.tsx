@@ -13,17 +13,17 @@ const page = ({ params }: { params: { formId: string } }) => {
         </div>
       )}
       {params.formId === "form2" && (
-         <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
+        <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
           <Form2 />
         </div>
       )}
       {params.formId === "form3" && (
-         <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
+        <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
           <Form3 />
         </div>
       )}
       {params.formId === "form4" && (
-         <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
+        <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-purple-500 to-indigo-600 p-2 sm:p-6">
           <Form4 />
         </div>
       )}

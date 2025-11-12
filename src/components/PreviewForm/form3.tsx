@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import LoadingBar from "@/styles/LoadingBar";
 
-
 const Form3 = () => {
   const { formId } = useParams();
   const router = useRouter();
@@ -69,7 +68,7 @@ const Form3 = () => {
   if (submitted)
     return (
       <div className="flex flex-col justify-center items-center mt-10">
-          <h2 className="text-2xl font-semibold text-green-600 bg-white px-2 py-1 rounded-lg">
+        <h2 className="text-2xl font-semibold text-green-600 bg-white px-2 py-1 rounded-lg">
           Form Submitted!
         </h2>
         <p className=" mt-2 text-white">Thank you for your response.</p>
@@ -80,8 +79,11 @@ const Form3 = () => {
     <div className="mt-15 text-black w-full flex flex-col justify-center items-center">
       <div className="w-full sm:w-[600px] flex justify-between px-6 py-2 bg-white rounded-lg text-black items-center text-xl font-bold mb-2">
         <div>Preview</div>
-        <button onClick={() => router.back()} className="bg-gray-400 px-2 rounded-lg cursor-pointer hover:bg-gray-200 transition-all">
-         Back
+        <button
+          onClick={() => router.back()}
+          className="bg-gray-400 px-2 rounded-lg cursor-pointer hover:bg-gray-200 transition-all"
+        >
+          Back
         </button>
       </div>
       <div className="bg-white shadow-lg rounded-xl w-full sm:w-[600px] p-6 flex flex-col gap-6">
@@ -102,7 +104,7 @@ const Form3 = () => {
               {field.mandatory && <span className="text-red-500 ml-1">*</span>}
             </label>
 
-            {/* ✅ Text, Number, Email, Date fields */}
+            {/*  Text, Number, Email, Date fields */}
             {!field.type.includes("checkbox") &&
               field.type !== "file upload" && (
                 <input
@@ -114,7 +116,7 @@ const Form3 = () => {
                 />
               )}
 
-            {/* ✅ Checkbox / Multiple Choice */}
+            {/*  Checkbox / Multiple Choice */}
             {field.type === "checkbox (single choice)" && (
               <div className="flex flex-col gap-1">
                 {field.options?.map((opt: string, i: number) => (
@@ -148,7 +150,7 @@ const Form3 = () => {
               </div>
             )}
 
-            {/* ✅ File Upload */}
+            {/*  File Upload */}
             {field.type === "file upload" && (
               <input
                 type="file"
@@ -160,9 +162,7 @@ const Form3 = () => {
             )}
           </div>
         ))}
-<button
-         className="px-6 py-3 rounded-md mt-4 transition-all bg-gray-400 text-white cursor-not-allowed"
-        >
+        <button className="px-6 py-3 rounded-md mt-4 transition-all bg-gray-400 text-white cursor-not-allowed">
           Submit
         </button>
       </div>

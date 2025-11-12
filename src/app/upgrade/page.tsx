@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { startPayment } from "@/utils/payments";
-import {useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const Page = () => {
@@ -88,16 +88,27 @@ const Page = () => {
         </div>
       </div>
 
-      {user?.isPremium ? <>
-       <div className="flex flex-col justify-center items-center text-2xl sm:text-4xl mt-10 font-semibold">
-        Thanks for being our premium user!
-      </div>
-      </>:<>
-      <div className="flex flex-col justify-center items-center gap-5 mt-10">
-        <div className="bg-gradient-to-r from-slate-300  to-yellow-100  rounded-xl px-5 py-1 text-5xl font-semibold text-gray-700">199/- Rupees Only (Lifetime offer)</div>
-        <button onClick={onPay} className="bg-gradient-to-r from-slate-300  to-green-400 hover:to-green-500 transition-all rounded-xl cursor-pointer px-4 py-1 text-3xl mt-5">Pay now</button>
-      </div>
-      </>}
+      {user?.isPremium ? (
+        <>
+          <div className="flex flex-col justify-center items-center text-2xl sm:text-4xl mt-10 font-semibold">
+            Thanks for being our premium user!
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="flex flex-col justify-center items-center gap-5 mt-10">
+            <div className="bg-gradient-to-r from-slate-300  to-yellow-100  rounded-xl px-5 py-1 text-5xl font-semibold text-gray-700">
+              199/- Rupees Only (Lifetime offer)
+            </div>
+            <button
+              onClick={onPay}
+              className="bg-gradient-to-r from-slate-300  to-green-400 hover:to-green-500 transition-all rounded-xl cursor-pointer px-4 py-1 text-3xl mt-5"
+            >
+              Pay now
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

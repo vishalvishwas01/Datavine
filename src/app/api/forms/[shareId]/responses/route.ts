@@ -12,7 +12,7 @@ export async function POST(
   try {
     await dbConnect();
 
-    const { shareId } = await context.params; // Await the params
+    const { shareId } = await context.params;
     const { responses } = await req.json();
 
     const form = await Form.findOne({ shareId }).lean();
@@ -33,10 +33,16 @@ export async function POST(
       respondentEmail: null,
     });
 
-    return NextResponse.json({ message: "Response submitted successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Response submitted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Submit Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -52,11 +58,11 @@ export async function GET(
       return NextResponse.json({ responses: [] }, { status: 401 });
     }
 
-    const { shareId } = await context.params; // Await the params
+    const { shareId } = await context.params;
 
     const responses = await UserData.find({
       shareId,
-      ownerEmail: session.user.email
+      ownerEmail: session.user.email,
     })
       .select("respondentEmail responses submittedAt formId")
       .lean();

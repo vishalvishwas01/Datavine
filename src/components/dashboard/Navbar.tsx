@@ -10,16 +10,14 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setOpenMenuButtonColor("#ffffff"); // for lg and above
+        setOpenMenuButtonColor("#ffffff");
       } else {
-        setOpenMenuButtonColor("#000000"); // below lg
+        setOpenMenuButtonColor("#000000");
       }
     };
 
-    // Run once on mount
     handleResize();
 
-    // Listen for screen resize
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -27,11 +25,13 @@ const Navbar = () => {
   const menuItems = [
     { label: "Home", ariaLabel: "Go to home page", link: "/home" },
     { label: "Forms", ariaLabel: "Go to forms", link: "/template" },
-    { label: "Analytics", ariaLabel: "Go to analytics", link: "/home/form1/responses" },
+    {
+      label: "Analytics",
+      ariaLabel: "Go to analytics",
+      link: "/home/form1/responses",
+    },
     { label: "Upgrade", ariaLabel: "Go to upgrade", link: "/upgrade" },
   ];
-
-
 
   return (
     <>

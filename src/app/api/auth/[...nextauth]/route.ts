@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { dbConnect } from "@/lib/dbConnect";
 import { User } from "@/models/User";
 
-// Extend the default session type to include id
 declare module "next-auth" {
   interface Session {
     user: {

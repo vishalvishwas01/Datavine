@@ -6,8 +6,11 @@ if (!MONGODB_URI) {
   throw new Error("Please define MONGODB_URI in your environment variables");
 }
 
-// Cache connections across hot reloads in dev mode
-const cached = (global as any).mongoose || { conn: null, promise: null, gfs: null };
+const cached = (global as any).mongoose || {
+  conn: null,
+  promise: null,
+  gfs: null,
+};
 
 export async function dbConnect() {
   if (cached.conn) return cached.conn;
@@ -21,21 +24,16 @@ export async function dbConnect() {
 
   cached.conn = await cached.promise;
 
-  // Initialize GridFSBucket once connection is ready
   if (!cached.gfs) {
     cached.gfs = new mongoose.mongo.GridFSBucket(cached.conn.connection.db, {
       bucketName: "uploads",
     });
   }
 
-  (global as any).mongoose = cached; // persist across hot reloads
+  (global as any).mongoose = cached;
   return cached.conn;
 }
 
-/**
- * Returns the GridFSBucket instance.
- * Make sure to call dbConnect() before using this.
- */
 export function getGridFSBucket() {
   if (!cached.conn || !cached.gfs) {
     throw new Error("Database not connected. Call dbConnect() first.");

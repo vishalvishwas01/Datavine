@@ -20,22 +20,21 @@ const FormResponseToggle = () => {
     loadUser();
   }, []);
 
-  // Load mapping: form1 -> shareId, form2 -> shareId ...
   useEffect(() => {
     async function loadForms() {
-        const res = await fetch("/api/forms/all", { cache: "no-store" });
-        const data = await res.json();
-        setFormLinks(data.forms || []);
+      const res = await fetch("/api/forms/all", { cache: "no-store" });
+      const data = await res.json();
+      setFormLinks(data.forms || []);
     }
     loadForms();
   }, []);
 
-  // If route doesn't look like /home/<id>/<page>, hide navbar
   const parts = pathname.split("/");
-  if (parts[1] !== "home" || parts[2] === "preview" || parts.length < 4) return null;
+  if (parts[1] !== "home" || parts[2] === "preview" || parts.length < 4)
+    return null;
 
   const currentShareId = parts[2];
-  const currentPage = parts[3]; // responses | analytics | report
+  const currentPage = parts[3];
 
   const navTo = (where: string) => {
     router.push(`/home/${currentShareId}/${where}`);
@@ -95,7 +94,7 @@ const FormResponseToggle = () => {
               className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
             >
               <span>Analytics</span>
-              <Image width={25} height={25} alt="lock" src="/lock.svg"/>
+              <Image width={25} height={25} alt="lock" src="/lock.svg" />
             </button>
 
             <button
@@ -103,7 +102,7 @@ const FormResponseToggle = () => {
               className="cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-700 hover:to-amber-500 transition-all rounded-2xl px-2 py-1 flex justify-center items-center gap-2"
             >
               <span>Download</span>
-              <Image width={25} height={25} alt="lock" src="/lock.svg"/>
+              <Image width={25} height={25} alt="lock" src="/lock.svg" />
             </button>
           </>
         )}

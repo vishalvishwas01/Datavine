@@ -14,7 +14,7 @@ const Home = () => {
     options?: string[];
     checkedOptions?: boolean[];
   }
-  
+
   const [form1Fields, setForm1Fields] = useState<Field[]>([]);
   const [form2Fields, setForm2Fields] = useState<Field[]>([]);
   const [form3Fields, setForm3Fields] = useState<Field[]>([]);
@@ -42,14 +42,12 @@ const Home = () => {
         setForm3Fields(data3.fields || []);
         setForm4Fields(data4.fields || []);
 
-        // After fetching, decide where to go
         const recentForm = localStorage.getItem("recentForms");
         const hasForm1 = data1.fields && data1.fields.length > 0;
         const hasForm2 = data2.fields && data2.fields.length > 0;
         const hasForm3 = data3.fields && data3.fields.length > 0;
         const hasForm4 = data4.fields && data4.fields.length > 0;
 
-        // Redirect logic
         if (hasForm1 || hasForm2 || hasForm3 || hasForm4) {
           if (recentForm === "form1" && hasForm1) {
             router.push("/home/form1");

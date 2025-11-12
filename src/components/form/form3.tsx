@@ -84,7 +84,6 @@ const Form3 = () => {
     setSelected(option);
     setIsOpen(false);
 
-    // clear any previous validation error when switching types
     setError("");
 
     if (option.includes("checkbox")) {
@@ -94,7 +93,6 @@ const Form3 = () => {
     }
   };
 
-  // main form
   useEffect(() => {
     const fetchForm = async () => {
       try {
@@ -111,7 +109,6 @@ const Form3 = () => {
     fetchForm();
   }, []);
 
-  // form 1
   useEffect(() => {
     const fetchForm = async () => {
       try {
@@ -128,7 +125,6 @@ const Form3 = () => {
     fetchForm();
   }, []);
 
-  //   form2
   useEffect(() => {
     const fetchForm = async () => {
       try {
@@ -145,7 +141,6 @@ const Form3 = () => {
     fetchForm();
   }, []);
 
-  //   form4
   useEffect(() => {
     const fetchForm = async () => {
       try {
@@ -164,14 +159,13 @@ const Form3 = () => {
 
   const saveFormToDB = async (updatedFields: Field[]) => {
     try {
-      // remove value before sending to backend
       const cleanedFields = updatedFields.map(({ value, ...rest }) => rest);
       console.log("Sending to DB1:", cleanedFields);
       const res = await fetch("/api/forms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          formId: "form3", // or dynamic id
+          formId: "form3",
           fields: cleanedFields,
         }),
       });
@@ -179,13 +173,12 @@ const Form3 = () => {
       const data = await res.json();
       console.log("Sending to DB2:", cleanedFields);
 
-      console.log("✅ Form saved (without values):", data);
+      console.log(" Form saved (without values):", data);
     } catch (err) {
       console.error(" Error saving form:", err);
     }
   };
 
-  // ✅ Fetch existing form data from DB
   useEffect(() => {
     const fetchFormData = async () => {
       try {
@@ -200,7 +193,7 @@ const Form3 = () => {
           setSavedDescription(form.description || "");
         }
       } catch (error) {
-        console.error("❌ Error fetching formData:", error);
+        console.error(" Error fetching formData:", error);
       } finally {
         setLoading(false);
       }
@@ -221,13 +214,13 @@ const Form3 = () => {
       });
 
       const data = await res.json();
-      console.log("✅ Saved to DB:", data);
+      console.log(" Saved to DB:", data);
 
       setSavedHeadLine(headLine);
       setSavedDescription(description);
       setIsEditing(false);
     } catch (error) {
-      console.error("❌ Error saving heading:", error);
+      console.error(" Error saving heading:", error);
     }
   };
 
@@ -238,10 +231,8 @@ const Form3 = () => {
   };
 
   const handleAddOrUpdate = async () => {
-    // reset previous errors
     setError("");
 
-    // heading must exist
     if (!heading.trim()) {
       setError("Please enter a heading.");
       return;
@@ -251,7 +242,6 @@ const Form3 = () => {
       return;
     }
 
-    // If type is checkbox (single/multiple) we must have at least one non-empty option
     if (selected.includes("checkbox")) {
       const hasValidOption = previewOptions.some((opt) => opt.trim() !== "");
       if (!hasValidOption) {
@@ -260,7 +250,6 @@ const Form3 = () => {
       }
     }
 
-    // Clean options: remove empty strings and trim
     const cleanedOptions =
       selected.includes("checkbox") || selected.includes("radio")
         ? previewOptions.map((o) => o.trim()).filter((o) => o !== "")
@@ -298,7 +287,6 @@ const Form3 = () => {
         setNewFieldsDisable(false);
       }
 
-      // success — clear form + errors
       setHeading("");
       setSelected("text");
       setInputValue("");
@@ -327,7 +315,6 @@ const Form3 = () => {
     setNewFieldsDisable(true);
   };
 
-  // ...existing code...
   const handleDelete = async (id: number) => {
     const updated = fields.filter((f) => f.id !== id);
     setFields(updated);
@@ -339,12 +326,11 @@ const Form3 = () => {
       console.error("Error saving after delete:", err);
     }
   };
-  // ...existing code...
 
   const handleFieldChange = (fieldId: number, value: string) => {
     setFields((prev) => {
       const updated = prev.map((f) => (f.id === fieldId ? { ...f, value } : f));
-      // Persist the change (best-effort)
+
       saveFormToDB(updated).catch((err) =>
         console.error("Error saving field change:", err)
       );
@@ -427,7 +413,6 @@ const Form3 = () => {
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className="bg-violet-400 rounded-2xl w-[95vw] sm:w-2/3 flex flex-col justify-start items-start py-4 px-4 gap-3"
         >
-          {/*  */}
           <div className="w-full flex justify-end items-center px-3">
             <div className="flex gap-4 relative">
               <AnimatePresence mode="wait">
@@ -450,7 +435,12 @@ const Form3 = () => {
                       onClick={handleCancel}
                       className="cursor-pointer h-8 flex justify-center items-center"
                     >
-                      <Image height={30} width={30} src="/cancel.svg" alt="cancel"/>
+                      <Image
+                        height={30}
+                        width={30}
+                        src="/cancel.svg"
+                        alt="cancel"
+                      />
                     </button>
                   </motion.div>
                 ) : (
@@ -513,7 +503,6 @@ const Form3 = () => {
               }}
             />
           </motion.div>
-          {/*  */}
 
           {/* Render saved fields */}
           {fields.map((field, index) => (
@@ -524,7 +513,6 @@ const Form3 = () => {
               className="border-2 w-full flex flex-col justify-start items-start gap-2 p-3 rounded bg-white/10 relative"
             >
               {editIndex === index ? (
-                // Inline edit mode
                 <div className="w-full flex flex-col gap-3">
                   <textarea
                     className="w-full text-2xl outline-none bg-transparent"
@@ -624,7 +612,7 @@ const Form3 = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
-                        if (heading.trim().length < 3) return; // stop save if invalid
+                        if (heading.trim().length < 3) return;
                         handleAddOrUpdate();
                       }}
                       className={`bg-green-500 hover:bg-green-700 ${
@@ -647,7 +635,6 @@ const Form3 = () => {
                   </div>
                 </div>
               ) : (
-                //Normal view mode
                 <>
                   <div className="flex justify-between w-full items-start">
                     <div className="text-lg font-semibold whitespace-pre-wrap break-words w-full pl-2">
@@ -872,7 +859,7 @@ const Form3 = () => {
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => {
-                    if (heading.trim().length < 3) return; // stop save if invalid
+                    if (heading.trim().length < 3) return;
                     handleAddOrUpdate();
                   }}
                   className={`px-4 py-2 cursor-pointer rounded text-white ${
@@ -938,7 +925,9 @@ const Form3 = () => {
       )}
 
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
-        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center">Share link: {publicLink}</p>
+        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center">
+          Share link: {publicLink}
+        </p>
       )}
 
       {publicLink.length === 0 && !loading && fields.length !== 0 && (
@@ -950,18 +939,27 @@ const Form3 = () => {
         </button>
       )}
 
-       {formDelete && 
+      {formDelete && (
         <div className=" flex flex-col justify-center items-center w-auto h-full gap-3 bg-gray-400 px-2 py-1 rounded-2xl">
-          <div className="w-full">This will delete user as well as form data</div>
-          <div className="flex justify-center items-center gap-5">
-          <button  onClick={()=>setFormDelete(false)} className="text-white bg-green-400 hover:bg-green-300 transition-all cursor-pointer px-2 py-2 rounded-xl">
-            Cancel
-          </button>
-          <button onClick={handleFormDelete} className="text-white flex flex-col justify-center items-center bg-red-600 hover:bg-red-400 transition-all cursor-pointer px-3 py-2 rounded-xl">
-            Delete
-          </button>
+          <div className="w-full">
+            This will delete user as well as form data
           </div>
-        </div>}
+          <div className="flex justify-center items-center gap-5">
+            <button
+              onClick={() => setFormDelete(false)}
+              className="text-white bg-green-400 hover:bg-green-300 transition-all cursor-pointer px-2 py-2 rounded-xl"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleFormDelete}
+              className="text-white flex flex-col justify-center items-center bg-red-600 hover:bg-red-400 transition-all cursor-pointer px-3 py-2 rounded-xl"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      )}
 
       {!loading && fieldsForm1.length !== 0 && (
         <Link
