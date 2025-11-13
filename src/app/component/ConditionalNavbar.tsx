@@ -28,7 +28,11 @@ export default function ConditionalNavbar() {
     "/upgrade"
   ];
 
-  if (!hideNavbarRoutes.includes(pathname)) return null;
+ const shouldHideNavbar =
+    hideNavbarRoutes.includes(pathname) ||
+    (pathname.startsWith("/home") && pathname.endsWith("/responses") || pathname.endsWith("/analytics") || pathname.endsWith("/report"));
+
+  if (!shouldHideNavbar) return null;
 
   return <Navbar />;
 }

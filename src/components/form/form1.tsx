@@ -30,6 +30,7 @@ const Form1 = () => {
   const [newAdd, setNewAdd] = useState(false);
   const [shareId, setShareId] = useState("");
   const [publicLink, setPublicLink] = useState("");
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
@@ -79,6 +80,12 @@ const Form1 = () => {
       setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
     }
   }, [shareId]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(publicLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -921,11 +928,19 @@ const Form1 = () => {
 
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
         <button
-          onClick={() => navigator.clipboard.writeText(publicLink)}
-          className="bg-green-600 text-white px-3 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-all"
+          onClick={handleCopy}
+          className={`bg-green-600 cursor-pointer text-white px-3 py-2 rounded-md transition-all duration-300 ${
+            copied ? "bg-green-700 scale-105" : "hover:bg-green-700"
+          }`}
         >
-          Copy Shareable Link
+          {copied ? "Copied!" : "Copy Shareable Link"}
         </button>
+      )}
+
+       {copied && (
+        <span className="text-green-600 text-sm mt-1 transition-opacity duration-500 animate-fadeIn">
+          Link copied to clipboard!
+        </span>
       )}
 
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
@@ -942,6 +957,8 @@ const Form1 = () => {
           click here to view share link
         </button>
       )}
+
+     
 
       {fields.length !== 0 && !loading && (
         <button

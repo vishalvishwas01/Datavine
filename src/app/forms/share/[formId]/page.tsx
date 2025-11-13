@@ -10,6 +10,7 @@ const ShareForm = () => {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  const [submitLoad, setSubmitLoad] = useState(false);
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -67,21 +68,25 @@ const ShareForm = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await fetch(`/api/forms/share/${shareId}/responses`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ responses }),
-      });
+const handleSubmit = async () => {
+  setSubmitLoad(true); // start loading right away
 
-      if (!res.ok) throw new Error("Failed to submit response");
-      setSubmitted(true);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Failed to submit. Try again later.");
-    }
-  };
+  try {
+    const res = await fetch(`/api/forms/share/${shareId}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ responses }),
+    });
+
+    if (!res.ok) throw new Error("Failed to submit response");
+    setSubmitted(true);
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    alert("Failed to submit. Try again later.");
+  } finally {
+    setSubmitLoad(false); // stop loading once done
+  }
+};
 
   if (loading)
     return (
@@ -195,7 +200,7 @@ const ShareForm = () => {
               : "bg-gray-400 text-white cursor-not-allowed"
           }`}
         >
-          Submit
+          {!submitLoad ? "Submit":"Submitting..."}
         </button>
       </div>
     </div>

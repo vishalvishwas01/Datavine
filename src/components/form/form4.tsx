@@ -27,10 +27,10 @@ const Form4 = () => {
   }
 
   const ref = useRef<HTMLButtonElement | null>(null);
-
   const [newAdd, setNewAdd] = useState(false);
   const [shareId, setShareId] = useState("");
   const [publicLink, setPublicLink] = useState("");
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
@@ -66,10 +66,26 @@ const Form4 = () => {
   ];
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPublicLink(`${window.location.origin}/forms/share/form4`);
+    async function fetchForm() {
+      const res = await fetch(`/api/forms?formId=${formId}`);
+      const data = await res.json();
+      setShareId(data.shareId);
+      setLoading(false);
     }
-  }, []);
+    fetchForm();
+  }, [formId]);
+
+  useEffect(() => {
+    if (shareId && typeof window !== "undefined") {
+      setPublicLink(`${window.location.origin}/forms/share/${shareId}`);
+    }
+  }, [shareId]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(publicLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -92,7 +108,7 @@ const Form4 = () => {
         const data = await res.json();
         setFields(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -108,7 +124,7 @@ const Form4 = () => {
         const data = await res.json();
         setFieldsForm1(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -124,7 +140,7 @@ const Form4 = () => {
         const data = await res.json();
         setFieldsForm2(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -140,7 +156,7 @@ const Form4 = () => {
         const data = await res.json();
         setFieldsForm3(data.fields || []);
       } catch (err) {
-        console.log("No existing form found — starting fresh.");
+        console.log("No existing form found — starting fresh." + err);
       } finally {
         setLoading(false);
       }
@@ -162,9 +178,9 @@ const Form4 = () => {
       });
 
       const data = await res.json();
-      console.log("Sending to DB2:", cleanedFields);
+      console.log("Sending to DB4:", cleanedFields);
 
-      console.log(" Form saved (without values):", data);
+      console.log("Form saved (without values):", data);
     } catch (err) {
       console.error(" Error saving form:", err);
     }
@@ -184,7 +200,7 @@ const Form4 = () => {
           setSavedDescription(form.description || "");
         }
       } catch (error) {
-        console.error(" Error fetching formData:", error);
+        console.error("Error fetching formData:", error);
       } finally {
         setLoading(false);
       }
@@ -205,13 +221,13 @@ const Form4 = () => {
       });
 
       const data = await res.json();
-      console.log(" Saved to DB:", data);
+      console.log("Saved to DB:", data);
 
       setSavedHeadLine(headLine);
       setSavedDescription(description);
       setIsEditing(false);
     } catch (error) {
-      console.error(" Error saving heading:", error);
+      console.error("Error saving heading:", error);
     }
   };
 
@@ -899,7 +915,7 @@ const Form4 = () => {
               </button>
 
               {/*Preview Button */}
-              <Link href={`/home/preview/form4`} className="cursor-pointer">
+              <Link href={`/home/preview/form1`} className="cursor-pointer">
                 <PreviewButton text="Preview Form" />
               </Link>
             </div>
@@ -909,15 +925,23 @@ const Form4 = () => {
 
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
         <button
-          onClick={() => navigator.clipboard.writeText(publicLink)}
-          className="bg-green-600 text-white px-3 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-all"
+          onClick={handleCopy}
+          className={`bg-green-600 cursor-pointer text-white px-3 py-2 rounded-md transition-all duration-300 ${
+            copied ? "bg-green-700 scale-105" : "hover:bg-green-700"
+          }`}
         >
-          Copy Shareable Link
+          {copied ? "Copied!" : "Copy Shareable Link"}
         </button>
       )}
 
+      {copied && (
+        <span className="text-green-600 text-sm mt-1 transition-opacity duration-500 animate-fadeIn">
+          Link copied to clipboard!
+        </span>
+      )}
+
       {fields.length !== 0 && !loading && publicLink.length !== 0 && (
-        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center">
+        <p className="text-sm mt-2 text-gray-600 w-full flex justify-center items-center text-center">
           Share link: {publicLink}
         </p>
       )}
@@ -928,6 +952,17 @@ const Form4 = () => {
           className="text-white bg-blue-400 hover:bg-blue-500 transition-all font-semibold px-2 py-1 rounded-xl cursor-pointer"
         >
           click here to view share link
+        </button>
+      )}
+
+      {fields.length !== 0 && !loading && (
+        <button
+          onClick={() => setFormDelete(true)}
+          className={`bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 mt-4 cursor-pointer transition-all ${
+            formDelete ? "hidden" : "flex"
+          }`}
+        >
+          Delete Form
         </button>
       )}
 
@@ -964,11 +999,10 @@ const Form4 = () => {
           />
         </Link>
       )}
-
       {!loading && fieldsForm2.length !== 0 && (
         <Link
           href={"/home/form2"}
-          className="w-full px-3 sm:w-2/3 cursor-default"
+          className="w-full px-3  sm:w-2/3 cursor-default"
         >
           <FormSwitchButton
             firstText="Switch to form 2"
@@ -976,11 +1010,10 @@ const Form4 = () => {
           />
         </Link>
       )}
-
       {!loading && fieldsForm3.length !== 0 && (
         <Link
           href={"/home/form3"}
-          className="w-full px-3 sm:w-2/3 cursor-default"
+          className="w-full px-3  sm:w-2/3 cursor-default"
         >
           <FormSwitchButton
             firstText="Switch to form 3"
