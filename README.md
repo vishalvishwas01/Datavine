@@ -13,7 +13,6 @@ This is a full-stack web application that allows users to create, share, and man
   - [Material-UI](https://mui.com/)
   - [Tailwind CSS](https://tailwindcss.com/)
   - [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://greensock.com/gsap/) for animations
-- **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/)
 - **Payment Integration:** [Razorpay](https://razorpay.com/)
 - **File Export:** [SheetJS (xlsx)](https://sheetjs.com/) for Excel export
 - **3D Graphics:** [Three.js](https://threejs.org/)
