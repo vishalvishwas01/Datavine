@@ -26,5 +26,14 @@ jobs:
     -   name: "Install dependencies and run tests"
         run: npm i
 
-    -   name: "Build and Test"
+    -   name: "Build"
         run: npm run build
+        env:
+            GITHUB_ID: ${{ secrets.GITHUB_ID }}
+            GITHUB_SECRET: ${{ secrets.GITHUB_SECRET }}
+            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+            MONGODB_URI: ${{ secrets.MONGODB_URI }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            NEXT_PUBLIC_RAZORPAY_KEY_ID: ${{ secrets.NEXT_PUBLIC_RAZORPAY_KEY_ID }}
+            RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
